@@ -30,6 +30,7 @@ public class Login extends HttpServlet {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		System.out.print("java print");
 		System.out.print("another print");
+		System.out.print("Google");
 	}
 
 	/**
