@@ -45,7 +45,7 @@ public class Nearby extends HttpServlet {
 		double lat = Double.parseDouble(request.getParameter("lat"));
 		double lon = Double.parseDouble(request.getParameter("lon"));
 
-//		TicketMasterClient client = new TicketMasterClient();
+//		TicketMasterClient client = new GithubJobClient();
 //		List<Item> items = client.search(lat, lon, null);
 //
 //		MySQLConnection connection = new MySQLConnection();
