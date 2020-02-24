@@ -45,7 +45,7 @@ public class Search extends HttpServlet {
 		double lon = Double.parseDouble(request.getParameter("lon"));
 
 //		TicketMasterClient client = new TicketMasterClient();
-//		List<Item> items = client.search(lat, lon, description, location, full_time);
+//		List<Item> items = client.search(null, null, );
 //		MySQLConnection connection = new MySQLConnection();
 //		Set<String> favoritedItemIds = connection.getFavoriteItemIds(userId);
 //		connection.close();
