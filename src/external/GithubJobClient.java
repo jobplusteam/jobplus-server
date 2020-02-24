@@ -16,21 +16,23 @@ import org.json.JSONObject;
 public class GithubJobClient {
 	private static final String HOST = "https://jobs.github.com";
 	private static final String PATH = "/positions.json?";
-	private static final String DEFAULT_DESCRIPTION = "job";
 	
-	public JSONArray search(double lat, double lon, String description, String location, boolean full_time) {
-		if (description == null) {
-			description = DEFAULT_DESCRIPTION;
-		}
-		try {
-			description = URLEncoder.encode(descripton, "UTF-8");
-		}
-		catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+	public JSONArray search(String description, String location, boolean full_time) {
+		if (description != null) {
+			try {
+				description = URLEncoder.encode(description, "UTF-8");
+			}
+			catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 		}
 		
-		String query = String.format("latlon=%s,%s", lat, lon, description, location, full_time);
-		String url = HOST + PATH + "?" + query;
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append(description).append(location).append(full_time).toString();
+		//append
+		
+		String url = HOST + PATH + "?" + queryBuilder.toString();
+		
 		StringBuilder responseBuilder = new StringBuilder();
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
@@ -69,9 +71,51 @@ public class GithubJobClient {
 		
 		return new JSONArray();
 	}
+	
+	public JSONArray nearby(double lat, double lon) {
+		String query = String.format("lat=%s&long=%s", lat, lon);
+		String url = HOST + PATH + "?" + query;
+		
+		StringBuilder responseBuilder = new StringBuilder();
+		try {
+			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+			connection.setRequestMethod("GET");
+			connection.connect();
+			
+			int responseCode = connection.getResponseCode();
+			System.out.println("Sending requests to url: " + url);
+			System.out.println("Response code: " + responseCode);
+			
+			if (responseCode != 200) {
+				return new JSONArray();
+			}
+			
+			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				responseBuilder.append(line);
+			}
+			reader.close();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return new JSONArray();
+		
+	}
 	public static void main(String[] args) {
 		GithubJobClient client = new GithubJobClient();
-		JSONObject jobs = client.search(lat, lon, description, location, full_time)
+		JSONArray jobs = client.search("java", null, false);
+		try {
+			for(int i = 0; i <jobs.length(); ++i) {
+				JSONObject job = jobs.getJSONObject(i);
+				System.out.println(job.toString(2));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 }
 
