@@ -1,6 +1,7 @@
 package rpc;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
+
+import external.GithubJobClient;
 
 /**
  * Servlet implementation class Register
@@ -33,7 +36,7 @@ public class Register extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		MySQLConnection connection = new MySQLConnection();
+		GithubJobClient connection = new GithubJobClient();
 		try {
 			JSONObject input = RpcHelper.readJSONObject(request);
 			String userid = input.getString("user_id");
