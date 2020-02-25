@@ -1,6 +1,7 @@
 package rpc;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
+
+import entity.Item;
+import external.GithubJobClient;
 
 /**
  * Servlet implementation class Nearby
@@ -45,18 +50,17 @@ public class Nearby extends HttpServlet {
 		double lat = Double.parseDouble(request.getParameter("lat"));
 		double lon = Double.parseDouble(request.getParameter("lon"));
 
-//		TicketMasterClient client = new GithubJobClient();
-//		List<Item> items = client.search(lat, lon, null);
-//
+		GithubJobClient client = new GithubJobClient();
+		List<Item> items = client.nearby(lat, lon, null);
+
 //		MySQLConnection connection = new MySQLConnection();
-//		Set<String> favoritedItemIds = connection.getFavoriteItemIds(userId);
 //		connection.close();
 
 		JSONArray array = new JSONArray();
-//		for (Item item : items) {
-//			JSONObject obj = item.toJSONObject();
-//			array.put(obj);
-//		}
+		for (Item job : jobs) {
+			JSONObject obj = job.toJSONObject();
+			array.put(obj);
+		}
 		RpcHelper.writeJsonArray(response, array);
 	}
 
