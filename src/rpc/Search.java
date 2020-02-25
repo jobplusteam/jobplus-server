@@ -1,6 +1,8 @@
 package rpc;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,6 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
+
+import entity.Item;
+import external.GithubJobClient;
 
 /**
  * Servlet implementation class Search
@@ -39,22 +45,22 @@ public class Search extends HttpServlet {
 		}
 
 		// optional
-		String userId = session.getAttribute("user_id").toString();
+//		String userId = session.getAttribute("user_id").toString();
 
-		double lat = Double.parseDouble(request.getParameter("lat"));
-		double lon = Double.parseDouble(request.getParameter("lon"));
+		String description = request.getParameter("description");
+		String location = request.getParameter("location");
+		boolean full_time = Boolean.parseBoolean(request.getParameter("full_time"));
 
-//		TicketMasterClient client = new TicketMasterClient();
-//		List<Item> items = client.search(null, null, );
+		GithubJobClient client = new GithubJobClient();
+		List<Item> jobs = client.search(description, location, full_time);
 //		MySQLConnection connection = new MySQLConnection();
-//		Set<String> favoritedItemIds = connection.getFavoriteItemIds(userId);
 //		connection.close();
 
 		JSONArray array = new JSONArray();
-//		for (Item item : items) {
-//			JSONObject obj = item.toJSONObject();
-//			array.put(obj);
-//		}
+		for (Item job : jobs) {
+			JSONObject obj = job.toJSONObject();
+			array.put(obj);
+		}
 		RpcHelper.writeJsonArray(response, array);
 	}
 
