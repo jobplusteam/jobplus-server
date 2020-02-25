@@ -1,119 +1,143 @@
 package entity;
 
-import java.util.Set;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Item {
-	private String itemId;
-	private String name;
-	private double rating;
-	private String address;
-	private Set<String> categories;
-	private String imageUrl;
+	private String id;
+	private String title;
+	private String type;
+	private String createdAt;
+	private String company;
+	private String location;
 	private String url;
-	private double distance;
-	
+	private String companyUrl;
+	private String description;
+
 	// Construct Item using ItemBuilder
 	public Item(ItemBuilder builder) {
-		this.itemId = builder.itemId;
-		this.name = builder.name;
-		this.rating = builder.rating;
-		this.address = builder.address;
-		this.categories = builder.categories;
-		this.imageUrl = builder.imageUrl;
+		this.id = builder.id;
+		this.title = builder.title;
+		this.type = builder.type;
+		this.createdAt = builder.createdAt;
+		this.company = builder.company;
+		this.location = builder.location;
 		this.url = builder.url;
-		this.distance = builder.distance;
+		this.companyUrl = builder.companyUrl;
+		this.description = builder.description;
 
 	}
-	
-	public String getItemId() {
-		return itemId;
+
+	public String getId() {
+		return id;
 	}
-	public String getName() {
-		return name;
+
+	public String getTitle() {
+		return title;
 	}
-	public double getRating() {
-		return rating;
+
+	public String getType() {
+		return type;
 	}
-	public String getAddress() {
-		return address;
+
+	public String getCreatedAt() {
+		return createdAt;
 	}
-	public Set<String> getCategories() {
-		return categories;
+
+	public String getCompany() {
+		return company;
 	}
-	public String getImageUrl() {
-		return imageUrl;
+
+	public String getLocation() {
+		return location;
 	}
+
 	public String getUrl() {
 		return url;
 	}
-	public double getDistance() {
-		return distance;
+
+	public String getCompanyUrl() {
+		return companyUrl;
 	}
-	
+
+	public String getDescription() {
+		return description;
+	}
+
 	// convert Item java object to JSONObject
 	public JSONObject toJSONObject() {
 		JSONObject obj = new JSONObject();
 		try {
-			obj.put("item_id", itemId);
-			obj.put("name", name);
-			obj.put("rating", rating);
-			obj.put("address", address);
-			obj.put("categories", new JSONArray(categories));
-			obj.put("image_url", imageUrl);
+			obj.put("id", id);
+			obj.put("title", title);
+			obj.put("type", type);
+			obj.put("created_at", createdAt);
+			obj.put("company", company);
+			obj.put("location", location);
 			obj.put("url", url);
-			obj.put("distance", distance);
+			obj.put("company_url", companyUrl);
+			obj.put("description", description);
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		return obj;
 	}
-	
+
 	// User ItemBuilder to build Item, builder pattern
 	public static class ItemBuilder {
-		private String itemId;
-		private String name;
-		private double rating;
-		private String address;
-		private Set<String> categories;
-		private String imageUrl;
+		private String id;
+		private String title;
+		private String type;
+		private String createdAt;
+		private String company;
+		private String location;
 		private String url;
-		private double distance;
-		
-		
-		public ItemBuilder setItemId(String itemId) {
-			this.itemId = itemId;
+		private String companyUrl;
+		private String description;
+
+		public ItemBuilder setId(String id) {
+			this.id = id;
 			return this;
 		}
-		public ItemBuilder setName(String name) {
-			this.name = name;
+
+		public ItemBuilder setTitle(String title) {
+			this.title = title;
 			return this;
 		}
-		public ItemBuilder setRating(double rating) {
-			this.rating = rating;
+
+		public ItemBuilder setType(String type) {
+			this.type = type;
 			return this;
 		}
-		public ItemBuilder setAddress(String address) {
-			this.address = address;
+
+		public ItemBuilder setCreatedAt(String createdAt) {
+			this.createdAt = createdAt;
 			return this;
 		}
-		public ItemBuilder setCategories(Set<String> categories) {
-			this.categories = categories;
+
+		public ItemBuilder setCompany(String company) {
+			this.company = company;
 			return this;
 		}
-		public ItemBuilder setImageUrl(String imageUrl) {
-			this.imageUrl = imageUrl;
+
+		public ItemBuilder setLocation(String location) {
+			this.location = location;
 			return this;
 		}
+
 		public ItemBuilder setUrl(String url) {
 			this.url = url;
 			return this;
 		}
-		public ItemBuilder setDistance(double distance) {
-			this.distance = distance;
+
+		public ItemBuilder setCompanyUrl(String companyUrl) {
+			this.companyUrl = companyUrl;
+			return this;
+		}
+
+		public ItemBuilder setDescription(String description) {
+			this.description = description;
 			return this;
 		}
 		
@@ -122,7 +146,5 @@ public class Item {
 		}
 
 	}
-	
-	
 
 }
