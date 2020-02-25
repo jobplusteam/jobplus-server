@@ -22,18 +22,21 @@ public class GithubJobClient {
 	private static final String HOST = "https://jobs.github.com";
 	private static final String PATH = "/positions.json";
 
-	public List<Item> search(String description, String location, boolean full_time) {
+	public List<Item> search(String description, String location, Boolean full_time) {
+		StringBuilder queryBuilder = new StringBuilder();
+		
 		if (description != null) {
 			try {
 				description = URLEncoder.encode(description, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
+			description = String.format("description=%s", description);
+			queryBuilder.append(description);
 		}
 
-		StringBuilder queryBuilder = new StringBuilder();
-		description = String.format("description=%s", description);
-		queryBuilder.append(description).toString();
+		//
+
 
 		String url = HOST + PATH + "?" + queryBuilder.toString();
 
@@ -64,9 +67,9 @@ public class GithubJobClient {
 		}
 
 		try {
-			JSONArray obj = new JSONArray(responseBuilder.toString());
-			if (obj != null) {
-				return getItemList(obj);
+			JSONArray objArray = new JSONArray(responseBuilder.toString());
+			if (objArray != null) {
+				return getItemList(objArray);
 			}
 			
 		} catch (JSONException e) {
