@@ -49,7 +49,7 @@ public class Search extends HttpServlet {
 
 		String description = request.getParameter("description");
 		String location = request.getParameter("location");
-		boolean full_time = Boolean.parseBoolean(request.getParameter("full_time"));
+		String full_time = request.getParameter("full_time");
 
 		GithubJobClient client = new GithubJobClient();
 		List<Item> jobs = client.search(description, location, full_time);

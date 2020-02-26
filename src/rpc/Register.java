@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
-import external.GithubJobClient;
+import db.MySQLConnection;
 
 /**
  * Servlet implementation class Register
@@ -36,7 +36,7 @@ public class Register extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		GithubJobClient connection = new GithubJobClient();
+		MySQLConnection connection = new MySQLConnection();
 		try {
 			JSONObject input = RpcHelper.readJSONObject(request);
 			String userid = input.getString("user_id");
