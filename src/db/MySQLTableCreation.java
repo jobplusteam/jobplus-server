@@ -23,6 +23,10 @@ public class MySQLTableCreation {
 				String sql = "DROP TABLE IF EXISTS categories";
 				statement.executeUpdate(sql);
 				
+				sql = "DROP TABLE IF EXISTS history";
+				statement.executeUpdate(sql);
+
+				
 				sql = "DROP TABLE IF EXISTS users";
 				statement.executeUpdate(sql);
 				
@@ -36,6 +40,17 @@ public class MySQLTableCreation {
 						+ "PRIMARY KEY (user_id)"
 						+ ")";
 				statement.executeUpdate(sql);
+				
+				sql = "CREATE TABLE history ("
+						+ "user_id VARCHAR(255) NOT NULL,"
+						+ "item_id VARCHAR(255) NOT NULL,"
+						+ "last_favor_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
+						+ "PRIMARY KEY (user_id, item_id),"
+						+ "FOREIGN KEY (user_id) REFERENCES users(user_id),"
+						+ "FOREIGN KEY (item_id) REFERENCES items(item_id)"
+						+ ")";
+				statement.executeUpdate(sql);
+
 				
 				// Step 4: insert fake user 1111/3229c1097c00d497a0fd282d586be050
 				sql = "INSERT INTO users VALUES('1111', '3229c1097c00d497a0fd282d586be050', 'John', 'Smith')";
