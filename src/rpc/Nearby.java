@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import db.MySQLConnection;
 import entity.Item;
 import external.GithubJobClient;
 
@@ -45,7 +46,7 @@ public class Nearby extends HttpServlet {
 		}
 
 		// optional
-		String userId = session.getAttribute("user_id").toString();
+//		String userId = session.getAttribute("user_id").toString();
 
 		double lat = Double.parseDouble(request.getParameter("lat"));
 		double lon = Double.parseDouble(request.getParameter("lon"));
@@ -53,8 +54,8 @@ public class Nearby extends HttpServlet {
 		GithubJobClient client = new GithubJobClient();
 		List<Item> jobs = client.nearby(lat, lon);
 
-//		MySQLConnection connection = new MySQLConnection();
-//		connection.close();
+		MySQLConnection connection = new MySQLConnection();
+		connection.close();
 
 		JSONArray array = new JSONArray();
 		for (Item job : jobs) {

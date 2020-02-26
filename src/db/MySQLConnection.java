@@ -6,10 +6,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
-import entity.Item;
-import entity.Item.ItemBuilder;
 
 public class MySQLConnection {
 	// make a connection, utilize JDBC to implement the connection between MYSQLClient and MySQL
