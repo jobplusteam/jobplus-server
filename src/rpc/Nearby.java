@@ -39,15 +39,17 @@ public class Nearby extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// allow access only if session exists
-		HttpSession session = request.getSession(false);
-		if (session == null) {
-			response.setStatus(403);
-			return;
-		}
+//		HttpSession session = request.getSession(false);
+//		if (session == null) {
+//			response.setStatus(403);
+//			return;
+//		}
 
 		// optional
 //		String userId = session.getAttribute("user_id").toString();
 
+		setAccessControlHeaders(response);
+		
 		double lat = Double.parseDouble(request.getParameter("lat"));
 		double lon = Double.parseDouble(request.getParameter("lon"));
 
@@ -74,5 +76,10 @@ public class Nearby extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
+	
+	private void setAccessControlHeaders(HttpServletResponse resp) {
+	      resp.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+	      resp.setHeader("Access-Control-Allow-Methods", "GET");
+	  }
 
 }
