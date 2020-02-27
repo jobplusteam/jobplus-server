@@ -47,8 +47,6 @@ public class Nearby extends HttpServlet {
 
 		// optional
 //		String userId = session.getAttribute("user_id").toString();
-
-		setAccessControlHeaders(response);
 		
 		double lat = Double.parseDouble(request.getParameter("lat"));
 		double lon = Double.parseDouble(request.getParameter("lon"));
@@ -76,10 +74,5 @@ public class Nearby extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-	
-	private void setAccessControlHeaders(HttpServletResponse resp) {
-	      resp.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-	      resp.setHeader("Access-Control-Allow-Methods", "GET");
-	  }
 
 }
