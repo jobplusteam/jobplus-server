@@ -41,13 +41,22 @@ public class MySQLTableCreation {
 						+ ")";
 				statement.executeUpdate(sql);
 				
-				sql = "CREATE TABLE history ("
+				sql = "CREATE TABLE saved ("
 						+ "user_id VARCHAR(255) NOT NULL,"
 						+ "item_id VARCHAR(255) NOT NULL,"
 						+ "last_favor_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
 						+ "PRIMARY KEY (user_id, item_id),"
 						+ "FOREIGN KEY (user_id) REFERENCES users(user_id),"
-						+ "FOREIGN KEY (item_id) REFERENCES items(item_id)"
+//						+ "FOREIGN KEY (item_id) REFERENCES items(item_id)"
+						+ ")";
+				
+				sql = "CREATE TABLE applied ("
+						+ "user_id VARCHAR(255) NOT NULL,"
+						+ "item_id VARCHAR(255) NOT NULL,"
+						+ "last_favor_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
+						+ "PRIMARY KEY (user_id, item_id),"
+						+ "FOREIGN KEY (user_id) REFERENCES users(user_id),"
+//						+ "FOREIGN KEY (item_id) REFERENCES items(item_id)"
 						+ ")";
 				statement.executeUpdate(sql);
 
