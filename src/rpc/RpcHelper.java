@@ -7,7 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import entity.Item;
+import entity.Item.ItemBuilder;
 
 public class RpcHelper {
 	// Writes a JSONArray to http response.
@@ -39,6 +43,12 @@ public class RpcHelper {
 		}
 
 		return new JSONObject();
+	}
+	
+	public static Item parseSavedJob (JSONObject savedJob) throws JSONException {
+		ItemBuilder builder = new ItemBuilder();
+		builder.setId(savedJob.getString("item_id"));	
+		return builder.build();
 	}
 
 }

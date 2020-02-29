@@ -109,6 +109,50 @@ public class GithubJobClient {
 
 	}
 
+	public Item getJobfromJobId(String jobId) {
+		String query = String.format("jobId=%s", jobId);
+		String url = HOST + PATH + "?" + query;
+
+		StringBuilder responseBuilder = new StringBuilder();
+		try {
+			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+			connection.setRequestMethod("GET");
+			connection.connect();
+
+			int responseCode = connection.getResponseCode();
+			System.out.println("Sending requests to url: " + url);
+			System.out.println("Response code: " + responseCode);
+
+			if (responseCode != 200) {
+				return null;
+			}
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				responseBuilder.append(line);
+			}
+			reader.close();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			JSONArray objArray = new JSONArray(responseBuilder.toString());
+			if (objArray != null) {
+				return getItemList(objArray).get(0);
+			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+
+	}
+	
 	// Convert JSONArray to a list of item objects.
 	private List<Item> getItemList(JSONArray jobs) throws JSONException {
 		List<Item> itemList = new ArrayList<>();
@@ -161,4 +205,6 @@ public class GithubJobClient {
 //		}
 
 	}
+
+	
 }
