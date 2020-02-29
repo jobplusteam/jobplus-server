@@ -6,6 +6,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
+
+import entity.Item;
 
 public class MySQLConnection {
 	// make a connection, utilize JDBC to implement the connection between MYSQLClient and MySQL
@@ -96,5 +100,46 @@ public class MySQLConnection {
 			e.printStackTrace();
 		}
 		return false;	
+	}
+	
+	public Set<String> getSavedJobs (String userId) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return null;
+		}
+		
+		Set<String> savedJobs = new HashSet<>();
+		
+		try {
+			String sql = "SELECT item_id FROM saved WHERE user_id = ?";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1,  userId);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				String savedJobId = rs.getString("item_id");
+				savedJobs.add(savedJobId);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return savedJobs;
+	}
+	
+	public void setSavedJob (String userId, Item item) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return;
+		}
+		try {
+			String sql = "INSERT IGNORE INTO saved VALUES (?)";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, item.getId());
+			ps.execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 }
