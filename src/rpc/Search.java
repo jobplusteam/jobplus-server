@@ -19,7 +19,7 @@ import external.GithubJobClient;
 /**
  * Servlet implementation class Search
  */
-@WebServlet("/Search")
+@WebServlet("/search")
 public class Search extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

@@ -23,49 +23,8 @@ public class GithubJobClient {
 	private static final String PATH = "/positions.json";
 
 	public List<Item> search(String description, String location, String full_time) {
-		StringBuilder queryBuilder = new StringBuilder();
-
-		if (description != null) {
-			try {
-				description = URLEncoder.encode(description, "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-			description = String.format("description=%s", description);
-			queryBuilder.append(description);
-		}
-
-		if (queryBuilder.length() != 0)
-			queryBuilder.append("&");
-
-		if (location != null) {
-			try {
-				location = URLEncoder.encode(location, "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-			location = String.format("location=%s", location);
-			queryBuilder.append(location);
-		}
-
-		if (queryBuilder.length() != 0)
-			queryBuilder.append("&");
-
-		if (full_time != null) {
-			try {
-				full_time = URLEncoder.encode(full_time, "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-			full_time = String.format("full_time=%s", full_time);
-			queryBuilder.append(full_time);
-		}
-
-		if (queryBuilder.length() == 0) {
-			return new ArrayList<>();
-		}
-
-		String url = HOST + PATH + "?" + queryBuilder.toString();
+		String query = String.format("description=%s&location=%s&full_time=%s", description, location, full_time);
+		String url = HOST + PATH + "?" + query;
 
 		StringBuilder responseBuilder = new StringBuilder();
 		try {
@@ -194,12 +153,12 @@ public class GithubJobClient {
 
 	public static void main(String[] args) {
 		GithubJobClient client = new GithubJobClient();
-//		List<Item> jobs = client.search("java", null, null);
-		List<Item> jobs = client.nearby(37.0, -122.0);
-//		System.out.println(jobs.get(0).toJSONObject());
-		for (Item job : jobs) {
-			System.out.println(job.toJSONObject());
-		}
+		List<Item> jobs = client.search("java", null, null);
+//		List<Item> jobs = client.nearby(37.0, -122.0);
+		System.out.println(jobs.get(0).toJSONObject());
+//		for (Item job : jobs) {
+//			System.out.println(job.toJSONObject());
+//		}
 
 	}
 }
