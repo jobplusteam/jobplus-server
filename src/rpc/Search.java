@@ -38,11 +38,11 @@ public class Search extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// allow access only if session exists
-		HttpSession session = request.getSession(false);
-		if (session == null) {
-			response.setStatus(403);
-			return;
-		}
+//		HttpSession session = request.getSession(false);
+//		if (session == null) {
+//			response.setStatus(403);
+//			return;
+//		}
 
 		// optional
 //		String userId = session.getAttribute("user_id").toString();
