@@ -20,11 +20,22 @@ import entity.Item.ItemBuilder;
 
 public class GithubJobClient {
 	private static final String HOST = "https://jobs.github.com";
-	private static final String PATH = "/positions.json";
+	private static final String PATH = "/positions";
 
-	public List<Item> search(String description, String location, String full_time) {
+	public List<Item> search(String description, String location, String full_time) throws UnsupportedEncodingException {
+		
+		// encode keyword with space
+		if (description != null) {
+			description = URLEncoder.encode(description, "UTF-8");
+		}
+		
+		if (location != null) {
+			location = URLEncoder.encode(location, "UTF-8");
+		}
+		
+		// Construct url
 		String query = String.format("description=%s&location=%s&full_time=%s", description, location, full_time);
-		String url = HOST + PATH + "?" + query;
+		String url = HOST + PATH + ".json?" + query;
 
 		StringBuilder responseBuilder = new StringBuilder();
 		try {
@@ -67,7 +78,7 @@ public class GithubJobClient {
 
 	public List<Item> nearby(double lat, double lon) {
 		String query = String.format("lat=%s&long=%s", lat, lon);
-		String url = HOST + PATH + "?" + query;
+		String url = HOST + PATH + ".json?" + query;
 
 		StringBuilder responseBuilder = new StringBuilder();
 		try {
@@ -110,8 +121,7 @@ public class GithubJobClient {
 	}
 
 	public Item getJobfromJobId(String jobId) {
-		String query = String.format("jobId=%s", jobId);
-		String url = HOST + PATH + "?" + query;
+		String url = HOST + PATH + "/" + jobId + ".json";
 
 		StringBuilder responseBuilder = new StringBuilder();
 		try {
@@ -140,9 +150,9 @@ public class GithubJobClient {
 		}
 
 		try {
-			JSONArray objArray = new JSONArray(responseBuilder.toString());
-			if (objArray != null) {
-				return getItemList(objArray).get(0);
+			JSONObject obj = new JSONObject(responseBuilder.toString());
+			if (obj != null) {
+				return getItemObject(obj);
 			}
 
 		} catch (JSONException e) {
@@ -152,7 +162,44 @@ public class GithubJobClient {
 		return null;
 
 	}
-	
+
+	// Convert JSONObject to a item object
+	private Item getItemObject(JSONObject job) throws JSONException {
+		
+		ItemBuilder builder = new ItemBuilder();
+		if (!job.isNull("id")) {
+			builder.setId(job.getString("id"));
+		}
+
+		if (!job.isNull("title")) {
+			builder.setTitle(job.getString("title"));
+		}
+
+		if (!job.isNull("type")) {
+			builder.setType(job.getString("type"));
+		}
+
+		if (!job.isNull("created_at")) {
+			builder.setCreatedAt(job.getString("created_at"));
+		}
+
+		if (!job.isNull("company")) {
+			builder.setCompany(job.getString("company"));
+		}
+		if (!job.isNull("url")) {
+			builder.setUrl(job.getString("url"));
+		}
+		if (!job.isNull("company_url")) {
+			builder.setCompanyUrl(job.getString("company_url"));
+		}
+
+		if (!job.isNull("description")) {
+			builder.setDescription(job.getString("description"));
+		}
+		
+		return builder.build();
+	}
+
 	// Convert JSONArray to a list of item objects.
 	private List<Item> getItemList(JSONArray jobs) throws JSONException {
 		List<Item> itemList = new ArrayList<>();
@@ -194,17 +241,6 @@ public class GithubJobClient {
 		}
 		return itemList;
 	}
-
-	public static void main(String[] args) {
-		GithubJobClient client = new GithubJobClient();
-		List<Item> jobs = client.search("java", null, null);
-//		List<Item> jobs = client.nearby(37.0, -122.0);
-		System.out.println(jobs.get(0).toJSONObject());
-//		for (Item job : jobs) {
-//			System.out.println(job.toJSONObject());
-//		}
-
-	}
-
 	
+
 }
