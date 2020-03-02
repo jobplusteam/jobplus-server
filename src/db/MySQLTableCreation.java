@@ -20,15 +20,24 @@ public class MySQLTableCreation {
 				
 				// Step 2 Drop tables in case they exist.
 				Statement statement = conn.createStatement();
-				String sql = "DROP TABLE IF EXISTS categories";
-				statement.executeUpdate(sql);
 				
-				sql = "DROP TABLE IF EXISTS history";
-				statement.executeUpdate(sql);
+				String sql = "DROP TABLE IF EXISTS items";
+				statement.execute(sql);
 
+				sql = "DROP TABLE IF EXISTS history";
+				statement.execute(sql);
 				
 				sql = "DROP TABLE IF EXISTS users";
-				statement.executeUpdate(sql);
+				statement.execute(sql);
+			
+				sql = "DROP TABLE IF EXISTS saved";
+				statement.execute(sql);
+				
+				sql = "DROP TABLE IF EXISTS applied";
+				statement.execute(sql);
+				
+				sql = "DROP TABLE IF EXISTS interests";
+				statement.execute(sql);
 				
 				// Step 3 Create new tables
 				
@@ -39,31 +48,38 @@ public class MySQLTableCreation {
 						+ "last_name VARCHAR(255),"
 						+ "PRIMARY KEY (user_id)"
 						+ ")";
-				statement.executeUpdate(sql);
+				statement.execute(sql);
 				
 				sql = "CREATE TABLE saved ("
 						+ "user_id VARCHAR(255) NOT NULL,"
 						+ "item_id VARCHAR(255) NOT NULL,"
 						+ "last_favor_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
 						+ "PRIMARY KEY (user_id, item_id),"
-						+ "FOREIGN KEY (user_id) REFERENCES users(user_id),"
-//						+ "FOREIGN KEY (item_id) REFERENCES items(item_id)"
+						+ "FOREIGN KEY (user_id) REFERENCES users(user_id)"
 						+ ")";
+				statement.execute(sql);
 				
 				sql = "CREATE TABLE applied ("
 						+ "user_id VARCHAR(255) NOT NULL,"
 						+ "item_id VARCHAR(255) NOT NULL,"
 						+ "last_favor_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-						+ "PRIMARY KEY (user_id, item_id),"
-						+ "FOREIGN KEY (user_id) REFERENCES users(user_id),"
-//						+ "FOREIGN KEY (item_id) REFERENCES items(item_id)"
+						+ "PRIMARY KEY (user_id),"
+						+ "FOREIGN KEY (user_id) REFERENCES users(user_id)"
 						+ ")";
-				statement.executeUpdate(sql);
+				statement.execute(sql);
+
+				sql = "CREATE TABLE interests ("
+						+ "user_id VARCHAR(255) NOT NULL,"
+						+ "interest VARCHAR(255) NOT NULL,"
+						+ "PRIMARY KEY (user_id, interest),"
+						+ "FOREIGN KEY (user_id) REFERENCES users(user_id)"
+						+ ")";
+				statement.execute(sql);
 
 				
 				// Step 4: insert fake user 1111/3229c1097c00d497a0fd282d586be050
 				sql = "INSERT INTO users VALUES('1111', '3229c1097c00d497a0fd282d586be050', 'John', 'Smith')";
-				statement.executeUpdate(sql);
+				statement.execute(sql);
 
 				
 				conn.close();
