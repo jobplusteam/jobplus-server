@@ -53,9 +53,10 @@ public class Search extends HttpServlet {
 
 		GithubJobClient client = new GithubJobClient();
 		List<Item> jobs = client.search(description, location, full_time);
+
 //		MySQLConnection connection = new MySQLConnection();
 //		connection.close();
-
+		
 		JSONArray array = new JSONArray();
 		for (Item job : jobs) {
 			JSONObject obj = job.toJSONObject();

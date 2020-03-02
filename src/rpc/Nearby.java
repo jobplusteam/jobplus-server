@@ -53,8 +53,8 @@ public class Nearby extends HttpServlet {
 		GithubJobClient client = new GithubJobClient();
 		List<Item> jobs = client.nearby(lat, lon);
 
-		MySQLConnection connection = new MySQLConnection();
-		connection.close();
+//		MySQLConnection connection = new MySQLConnection();
+//		connection.close();
 
 		JSONArray array = new JSONArray();
 		for (Item job : jobs) {
