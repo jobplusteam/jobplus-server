@@ -5,11 +5,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import entity.Item;
 
@@ -145,4 +146,31 @@ public class MySQLConnection {
 		}
 
 	}
+
+	public List<String> getInterests(String userId) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new ArrayList<>();
+		}
+		List<String> interests = new ArrayList<>();
+		try {
+			String sql = "SELECT interest FROM interests WHERE user_id = ? ";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, userId);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				String i = rs.getString("interest");
+				interests.add(i);
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return interests;
+	}
 }
+
+
+
+
+
+
