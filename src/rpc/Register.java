@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
+import org.json.simple.JSONArray;
 
 import db.MySQLConnection;
 
@@ -45,9 +46,10 @@ public class Register extends HttpServlet {
 			String password = input.getString("password");
 			String firstName = input.getString("first_name");
 			String lastName = input.getString("last_name");
+			org.json.JSONArray interests = input.getJSONArray("interests");
 
 			JSONObject obj = new JSONObject();
-			if (connection.registerUser(userId, password, firstName, lastName)) {
+			if (connection.registerUser(userId, password, firstName, lastName, interests)) {
 				obj.put("status", "ok");
 			} else {
 				obj.put("status", "User Already Exists");

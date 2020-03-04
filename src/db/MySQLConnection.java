@@ -8,6 +8,9 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import entity.Item;
 
 public class MySQLConnection {
@@ -77,19 +80,23 @@ public class MySQLConnection {
 		return false;
 	}
 
-	public boolean registerUser(String userId, String password, String firstname, String lastname) {
+	public boolean registerUser(String userId, String password, String firstname, String lastname, JSONArray interests) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
 			return false;
 		}
 
 		try {
-			String sql = "INSERT IGNORE INTO users VALUES (?, ?, ?, ?)";
+			String sql = "INSERT IGNORE INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, userId);
 			ps.setString(2, password);
 			ps.setString(3, firstname);
 			ps.setString(4, lastname);
+			for (int i = 0; i < interests.length(); i++) {
+				String currInterest = interests.getJSONObject(i).toString();
+				ps.setString(i+5, currInterest);
+			}
 
 			return ps.executeUpdate() == 1;
 		} catch (Exception e) {
