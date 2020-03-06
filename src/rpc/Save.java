@@ -67,9 +67,9 @@ public class Save extends HttpServlet {
 		// TODO Auto-generated method stub
 		JSONObject input = RpcHelper.readJSONObject(request);
 		try {
+			//payload expected {"user_id" : "xxx", "job_id" : "xxxxx" , "isSave" : "true" }
 			String userId = input.getString("user_id");
 			Item item = RpcHelper.parseSavedJob(input.getJSONObject("savedJob"));
-			
 			MySQLConnection connection = new MySQLConnection();
 			connection.setSavedJob(userId, item);
 			connection.close();

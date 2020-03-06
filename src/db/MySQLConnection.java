@@ -81,25 +81,37 @@ public class MySQLConnection {
 		return false;
 	}
 
-	public boolean registerUser(String userId, String password, String firstname, String lastname, JSONArray interests) {
+	public boolean registerUser(String userId, String password, String firstname, String lastname,
+			JSONArray interests) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
 			return false;
 		}
 
 		try {
-			String sql = "INSERT IGNORE INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, userId);
-			ps.setString(2, password);
-			ps.setString(3, firstname);
-			ps.setString(4, lastname);
-			for (int i = 0; i < interests.length(); i++) {
-				String currInterest = interests.getJSONObject(i).toString();
-				ps.setString(i+5, currInterest);
-			}
 
-			return ps.executeUpdate() == 1;
+			// step 1: add user into users table
+			String sql1 = "INSERT IGNORE INTO users (user_id, password, first_name, last_name) "
+					+ "VALUES (?, ?, ?, ?)";
+
+			PreparedStatement ps1 = conn.prepareStatement(sql1);
+			ps1.setString(1, userId);
+			ps1.setString(2, password);
+			ps1.setString(3, firstname);
+			ps1.setString(4, lastname);
+			if (ps1.executeUpdate() != 1)
+				return false;
+
+			// step 2: add interest into interests table
+			for (int i = 0; i < interests.length(); i++) {
+				String sql2 = "INSERT IGNORE INTO interests (user_id, interest) VALUES (?, ?)";
+				PreparedStatement ps2 = conn.prepareStatement(sql2);
+				ps2.setString(1, userId);
+				ps2.setString(2, interests.getString(i));
+				if (ps2.executeUpdate() != 1) {
+					return false;
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -144,7 +156,6 @@ public class MySQLConnection {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public List<String> getInterests(String userId) {
@@ -168,9 +179,3 @@ public class MySQLConnection {
 		return interests;
 	}
 }
-
-
-
-
-
-
