@@ -81,25 +81,30 @@ public class MySQLConnection {
 		return false;
 	}
 
-	public boolean registerUser(String userId, String password, String firstname, String lastname, JSONArray interests) {
+	public boolean registerUser(String userId, String password, String firstname, String lastname,
+			JSONArray interests) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
 			return false;
 		}
 
 		try {
-			String sql = "INSERT IGNORE INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, userId);
-			ps.setString(2, password);
-			ps.setString(3, firstname);
-			ps.setString(4, lastname);
+			String sql1 = "INSERT IGNORE INTO users VALUES (?, ?, ?, ?)";
+			String sql2 = "INSERT IGNORE INTO interests VALUES (?, ?)";
+			PreparedStatement ps1 = conn.prepareStatement(sql1);
+			ps1.setString(1, userId);
+			ps1.setString(2, password);
+			ps1.setString(3, firstname);
+			ps1.setString(4, lastname);
+			PreparedStatement ps2 = conn.prepareStatement(sql2);
+			ps2.setString(1, userId);
 			for (int i = 0; i < interests.length(); i++) {
-				String currInterest = interests.getJSONObject(i).toString();
-				ps.setString(i+5, currInterest);
+				ps2.setString(2, interests.getString(i));
+				if (ps2.executeUpdate() != 1) {
+					return false;
+				}
 			}
-
-			return ps.executeUpdate() == 1;
+			return ps1.executeUpdate() == 1;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -168,9 +173,3 @@ public class MySQLConnection {
 		return interests;
 	}
 }
-
-
-
-
-
-
