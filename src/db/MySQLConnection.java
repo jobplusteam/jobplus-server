@@ -115,7 +115,7 @@ public class MySQLConnection {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return false;
+		return true;
 	}
 
 	public Set<String> getSavedJobs(String userId) {
