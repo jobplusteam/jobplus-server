@@ -143,15 +143,32 @@ public class MySQLConnection {
 		return savedJobs;
 	}
 
-	public void setSavedJob(String userId, Item item) {
+	public void setSavedJob(String userId, String jobId) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
 			return;
 		}
 		try {
-			String sql = "INSERT IGNORE INTO saved VALUES (?)";
+			String sql = "INSERT IGNORE INTO saved VALUES (?,?)";
 			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, item.getId());
+			ps.setString(1, userId);
+			ps.setString(2, jobId);
+			ps.execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void unSetSavedJob(String userId, String jobId) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return;
+		}
+		try {
+			String sql = "DELETE FROM saved WHERE user_id = ? and item_id = ?";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, userId);
+			ps.setString(2, jobId);
 			ps.execute();
 		} catch (Exception e) {
 			e.printStackTrace();
