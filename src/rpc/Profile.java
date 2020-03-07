@@ -37,8 +37,7 @@ public class Profile extends HttpServlet {
 			throws ServletException, IOException {
 		MySQLConnection connection = new MySQLConnection();
 		try {
-			JSONObject input = RpcHelper.readJSONObject(request);
-			String userId = input.getString("user_id");
+			String userId = request.getParameter("user_id");
 			String fullName = connection.getFullname(userId);
 			List<String> interests = connection.getInterests(userId);
 			JSONObject obj = new JSONObject();
