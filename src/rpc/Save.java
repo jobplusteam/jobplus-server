@@ -1,7 +1,6 @@
 package rpc;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -67,11 +66,18 @@ public class Save extends HttpServlet {
 		// TODO Auto-generated method stub
 		JSONObject input = RpcHelper.readJSONObject(request);
 		try {
-			//payload expected {"user_id" : "xxx", "job_id" : "xxxxx" , "isSave" : "true" }
+			//payload expected {"user_id" : "xxx", "job_id" : "xxxxx" , "is_save" : "true" }
 			String userId = input.getString("user_id");
-			Item item = RpcHelper.parseSavedJob(input.getJSONObject("savedJob"));
+			String jobId = input.getString("job_id");
+			String isSave = input.getString("is_save");
+
 			MySQLConnection connection = new MySQLConnection();
-			connection.setSavedJob(userId, item);
+			if (isSave == "true") {
+				connection.setSavedJob(userId, jobId);
+			} else {
+				connection.unSetSavedJob(userId, jobId);
+			}
+			
 			connection.close();
 			RpcHelper.writeJsonObject(response, new JSONObject().put("result", "SUCCESS"));
 		} catch (JSONException e) {
