@@ -45,7 +45,7 @@ public class Logout extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		RpcHelper.writeJsonObject(response, res);
+		RpcHelper.writeJsonObject(request, response, res);
 	}
 
 	/**
