@@ -40,11 +40,14 @@ public class Nearby extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		String userId = "";
+
 		// allow access only if session exists
 		HttpSession session = request.getSession(false);
-
-		// optional
-		String userId = session.getAttribute("user_id").toString();
+		if (session != null) {
+			// optional
+			userId = session.getAttribute("user_id").toString();
+		}
 
 		double lat = Double.parseDouble(request.getParameter("lat"));
 		double lon = Double.parseDouble(request.getParameter("lon"));

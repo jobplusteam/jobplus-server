@@ -40,12 +40,15 @@ public class Search extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		
+		String userId = "";
+		
 		//allow access only if session exists
 		HttpSession session = request.getSession(false);
-
-		//optional
-		String userId = session.getAttribute("user_id").toString();
+		if (session != null) {
+			//optional
+			userId = session.getAttribute("user_id").toString();
+		}
 
 		String description = request.getParameter("description");
 		String location = request.getParameter("location");
