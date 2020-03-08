@@ -46,7 +46,8 @@ public class Save extends HttpServlet {
 			response.setStatus(403);
 			return;
 		}
-		String userId = request.getParameter("user_id");
+
+		String userId = session.getAttribute("user_id").toString();
 		JSONArray array = new JSONArray();
 
 		MySQLConnection connection = new MySQLConnection();
@@ -82,24 +83,26 @@ public class Save extends HttpServlet {
 			response.setStatus(403);
 			return;
 		}
-
+		
+		String userId = session.getAttribute("user_id").toString();
 		JSONObject input = RpcHelper.readJSONObject(request);
 		try {
-			// payload expected {"user_id" : "xxx", "job_id" : "xxxxx" , "is_save" : "true"
-			// }
-			String userId = input.getString("user_id");
+			JSONObject res = new JSONObject();
+			// payload expected { "job_id" : "xxxxx" , "is_save" : "true"}
 			String jobId = input.getString("job_id");
 			Boolean isSave = input.getBoolean("is_save");
 
 			MySQLConnection connection = new MySQLConnection();
 			if (isSave) {
 				connection.setSavedJob(userId, jobId);
+				res.put("result", "SAVE");
 			} else {
 				connection.unSetSavedJob(userId, jobId);
+				res.put("result", "UNSAVE");
 			}
 
 			connection.close();
-			RpcHelper.writeJsonObject(response, new JSONObject().put("result", "SUCCESS"));
+			RpcHelper.writeJsonObject(response, res);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

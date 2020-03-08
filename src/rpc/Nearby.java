@@ -40,34 +40,29 @@ public class Nearby extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		//allow access only if session exists
+		// allow access only if session exists
 		HttpSession session = request.getSession(false);
-		if (session == null) {
-			response.setStatus(403);
-			return;
-		}
 
-		//optional
+		// optional
 		String userId = session.getAttribute("user_id").toString();
-		
+
 		double lat = Double.parseDouble(request.getParameter("lat"));
 		double lon = Double.parseDouble(request.getParameter("lon"));
 
 		GithubJobClient client = new GithubJobClient();
 		List<Item> jobs = client.nearby(lat, lon);
 
-
 		MySQLConnection connection = new MySQLConnection();
 		Set<String> savedJobs = connection.getSavedJobs(userId);
 		connection.close();
-		
+
 		JSONArray array = new JSONArray();
 		for (Item job : jobs) {
 			JSONObject obj = job.toJSONObject();
 			boolean isSaved = false;
 			if (savedJobs.contains(job.getId())) {
 				isSaved = true;
-			} 
+			}
 			try {
 				obj.append("is_saved", isSaved);
 			} catch (JSONException e) {
