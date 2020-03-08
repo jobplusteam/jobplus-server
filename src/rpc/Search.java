@@ -69,7 +69,7 @@ public class Search extends HttpServlet {
 				isSaved = true;
 			} 
 			try {
-				obj.append("is_saved", isSaved);
+				obj.put("is_saved", isSaved);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
