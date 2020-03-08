@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import db.MySQLConnection;
@@ -36,8 +37,22 @@ public class Login extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		JSONObject res = new JSONObject();
+		// check if session exists
+		HttpSession session = request.getSession(false);
+		String msg ="";
+		if (session == null) {
+			msg = "no session";
+		} else {
+			msg = "ok";
+		}
+		try {
+			res.put("status", msg);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		RpcHelper.writeJsonObject(request, response, res);
 	}
 
 	/**
