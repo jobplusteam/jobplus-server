@@ -51,7 +51,7 @@ public class Recommend extends HttpServlet {
 			return;
 		}
 
-		//optional
+		// session exists...
 		String userId = session.getAttribute("user_id").toString();
 
 		List<Item> items = new ArrayList<>();
