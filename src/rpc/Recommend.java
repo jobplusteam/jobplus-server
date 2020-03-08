@@ -90,7 +90,7 @@ public class Recommend extends HttpServlet {
 		for (Item item : items) {
 			array.put(item.toJSONObject());
 		}
-		RpcHelper.writeJsonArray(response, array);
+		RpcHelper.writeJsonArray(request, response, array);
 	}
 
 	/**

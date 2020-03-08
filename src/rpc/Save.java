@@ -66,7 +66,7 @@ public class Save extends HttpServlet {
 			}
 			array.put(obj);
 		}
-		RpcHelper.writeJsonArray(response, array);
+		RpcHelper.writeJsonArray(request, response, array);
 
 	}
 
@@ -113,7 +113,7 @@ public class Save extends HttpServlet {
 			}
 
 			connection.close();
-			RpcHelper.writeJsonObject(response, res);
+			RpcHelper.writeJsonObject(request, response, res);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

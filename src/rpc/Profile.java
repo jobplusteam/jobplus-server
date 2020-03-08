@@ -49,7 +49,7 @@ public class Profile extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			RpcHelper.writeJsonObject(response, res);
+			RpcHelper.writeJsonObject(request, response, res);
 			return;
 		}
 
@@ -63,7 +63,7 @@ public class Profile extends HttpServlet {
 			res.put("user_id", userId);
 			res.put("full_name", fullName);
 			res.put("interests", new JSONArray(interests));
-			RpcHelper.writeJsonObject(response, res);
+			RpcHelper.writeJsonObject(request, response, res);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

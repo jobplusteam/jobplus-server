@@ -74,7 +74,7 @@ public class Nearby extends HttpServlet {
 			}
 			array.put(obj);
 		}
-		RpcHelper.writeJsonArray(response, array);
+		RpcHelper.writeJsonArray(request, response, array);
 	}
 
 	/**

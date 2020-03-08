@@ -15,15 +15,17 @@ import entity.Item.ItemBuilder;
 
 public class RpcHelper {
 	// Writes a JSONArray to http response.
-	public static void writeJsonArray(HttpServletResponse response, JSONArray array) throws IOException {
-		response.setHeader("Access-Control-Allow-Origin", "*");
+	public static void writeJsonArray(HttpServletRequest request, HttpServletResponse response, JSONArray array) throws IOException {
+		response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+		response.setHeader("Access-Control-Allow-Credentials","true");
 		response.setContentType("application/json");
 		response.getWriter().print(array);
 	}
 
 	// Writes a JSONObject to http response.
-	public static void writeJsonObject(HttpServletResponse response, JSONObject obj) throws IOException {
-		response.setHeader("Access-Control-Allow-Origin", "*");
+	public static void writeJsonObject(HttpServletRequest request, HttpServletResponse response, JSONObject obj) throws IOException {
+		response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+		response.setHeader("Access-Control-Allow-Credentials","true");
 		response.setContentType("application/json");
 		response.getWriter().print(obj);
 
