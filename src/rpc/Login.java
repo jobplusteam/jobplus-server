@@ -40,11 +40,15 @@ public class Login extends HttpServlet {
 		JSONObject res = new JSONObject();
 		// check if session exists
 		HttpSession session = request.getSession(false);
-		String msg ="";
+		MySQLConnection connection = new MySQLConnection();
+		String msg = "";
 		if (session == null) {
 			msg = "no session";
 		} else {
-			msg = "ok";
+			String userId = session.getAttribute("user_id").toString();
+			String fullName = connection.getFullname(userId);
+			msg = fullName;
+			connection.close();
 		}
 		try {
 			res.put("status", msg);
