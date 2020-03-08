@@ -2,14 +2,17 @@ package rpc;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import db.MySQLConnection;
@@ -37,15 +40,15 @@ public class Nearby extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// allow access only if session exists
-//		HttpSession session = request.getSession(false);
-//		if (session == null) {
-//			response.setStatus(403);
-//			return;
-//		}
+		//allow access only if session exists
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			response.setStatus(403);
+			return;
+		}
 
-		// optional
-//		String userId = session.getAttribute("user_id").toString();
+		//optional
+		String userId = session.getAttribute("user_id").toString();
 		
 		double lat = Double.parseDouble(request.getParameter("lat"));
 		double lon = Double.parseDouble(request.getParameter("lon"));
@@ -53,12 +56,24 @@ public class Nearby extends HttpServlet {
 		GithubJobClient client = new GithubJobClient();
 		List<Item> jobs = client.nearby(lat, lon);
 
-//		MySQLConnection connection = new MySQLConnection();
-//		connection.close();
 
+		MySQLConnection connection = new MySQLConnection();
+		Set<String> savedJobs = connection.getSavedJobs(userId);
+		connection.close();
+		
 		JSONArray array = new JSONArray();
 		for (Item job : jobs) {
 			JSONObject obj = job.toJSONObject();
+			boolean isSaved = false;
+			if (savedJobs.contains(job.getId())) {
+				isSaved = true;
+			} 
+			try {
+				obj.append("is_saved", isSaved);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			array.put(obj);
 		}
 		RpcHelper.writeJsonArray(response, array);
