@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import db.MySQLConnection;
@@ -37,25 +38,32 @@ public class Profile extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		String userId = "";
-
+		JSONObject res = new JSONObject();
 		// allow access only if session exists
 		HttpSession session = request.getSession(false);
-		if (session != null) {
-			// optional
-			userId = session.getAttribute("user_id").toString();
+		if (session == null) {
+			response.setStatus(403);
+			try {
+				res.put("message", "you need login first");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			RpcHelper.writeJsonObject(response, res);
+			return;
 		}
+
+		String userId = session.getAttribute("user_id").toString();
 
 		MySQLConnection connection = new MySQLConnection();
 		try {
 			String fullName = connection.getFullname(userId);
 			List<String> interests = connection.getInterests(userId);
-			JSONObject obj = new JSONObject();
-
-			obj.put("user_id", userId);
-			obj.put("full_name", fullName);
-			obj.put("interests", new JSONArray(interests));
-			RpcHelper.writeJsonObject(response, obj);
+			
+			res.put("user_id", userId);
+			res.put("full_name", fullName);
+			res.put("interests", new JSONArray(interests));
+			RpcHelper.writeJsonObject(response, res);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

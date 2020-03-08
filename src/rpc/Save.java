@@ -94,11 +94,22 @@ public class Save extends HttpServlet {
 
 			MySQLConnection connection = new MySQLConnection();
 			if (isSave) {
-				connection.setSavedJob(userId, jobId);
-				res.put("result", "SAVE");
+				if (connection.setSavedJob(userId, jobId)) {
+					res.put("result", "SAVE");
+					res.put("message", "success!");
+				} else {
+					res.put("result", "SAVE");
+					res.put("message", "failed!");
+				}
+				
 			} else {
-				connection.unSetSavedJob(userId, jobId);
-				res.put("result", "UNSAVE");
+				if (connection.unSetSavedJob(userId, jobId)) {
+					res.put("result", "UNSAVE");
+					res.put("message", "success!");
+				} else {
+					res.put("result", "UNSAVE");
+					res.put("message", "failed!");
+				}
 			}
 
 			connection.close();

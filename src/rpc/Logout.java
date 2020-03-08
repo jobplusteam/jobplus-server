@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Servlet implementation class Logout
  */
@@ -35,6 +38,14 @@ public class Logout extends HttpServlet {
 		if (session != null) {
 			session.invalidate();
 		}
+		JSONObject res = new JSONObject();
+		try {
+			res.put("message", "logout successfully");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		RpcHelper.writeJsonObject(response, res);
 	}
 
 	/**

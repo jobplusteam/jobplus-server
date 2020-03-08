@@ -61,6 +61,7 @@ public class Recommend extends HttpServlet {
 
 		if (savedJobs.size() == 0) {
 			// case 1: user has no saved jobs
+			System.out.println("recommended based on interests");
 			InterestsRecommendation recommendation = new InterestsRecommendation(); 
 			try {
 				items = recommendation.recommendItems(userId);
@@ -70,6 +71,8 @@ public class Recommend extends HttpServlet {
 			}
 		} else {
 			// case 2: user has saved jobs
+			System.out.println("recommended based on history");
+
 			KeywordRecommendation recommendation = new KeywordRecommendation();
 
 			try {
