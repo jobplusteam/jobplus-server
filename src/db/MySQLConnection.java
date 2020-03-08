@@ -149,7 +149,7 @@ public class MySQLConnection {
 			return;
 		}
 		try {
-			String sql = "INSERT IGNORE INTO saved VALUES (?,?)";
+			String sql = "INSERT IGNORE INTO saved (user_id, item_id) VALUES (?,?)";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, userId);
 			ps.setString(2, jobId);

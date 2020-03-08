@@ -47,7 +47,7 @@ public class MonkeyLearnExtractor {
 			return Integer.compare(e2.getValue(), e1.getValue());
 		});
 		List<String> res = new ArrayList<>();
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 1; i++) {
 			res.add(keywordList.get(i).getKey());
 		}
 		

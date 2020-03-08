@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -35,9 +36,19 @@ public class Profile extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		//allow access only if session exists
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			response.setStatus(403);
+			return;
+		}
+
+		//optional
+		String userId = session.getAttribute("user_id").toString();
+
 		MySQLConnection connection = new MySQLConnection();
 		try {
-			String userId = request.getParameter("user_id");
 			String fullName = connection.getFullname(userId);
 			List<String> interests = connection.getInterests(userId);
 			JSONObject obj = new JSONObject();

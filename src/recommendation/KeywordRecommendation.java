@@ -24,20 +24,20 @@ public class KeywordRecommendation {
 		Set<String> savedJobIds = connection.getSavedJobs(userId);
 		connection.close();
 
-		// Step 2, get all saved job_description from github api
+		// Step 2, get all saved job_title from github api
 		GithubJobClient client = new GithubJobClient();
-		List<String> descriptions = new ArrayList<>();
+		List<String> titles = new ArrayList<>();
 
 		for (String savedId : savedJobIds) {
 			Item job = client.getJobfromJobId(savedId);
-			descriptions.add(job.getDescription());
+			titles.add(job.getTitle());
 		}
 
 		// Step 3, extract 3 keywords of all texts from MonkeyLearn
 		MonkeyLearnExtractor ml = new MonkeyLearnExtractor();
-		String[] strArray = new String[descriptions.size()];
-		for (int i = 0; i < descriptions.size(); i++) {
-			strArray[i] = descriptions.get(i);
+		String[] strArray = new String[titles.size()];
+		for (int i = 0; i < titles.size(); i++) {
+			strArray[i] = titles.get(i);
 		}
 		JSONArray jArray = ml.extract(strArray);
 		List<String> strList = ml.keywords(jArray);
