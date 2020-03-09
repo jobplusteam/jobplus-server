@@ -12,8 +12,6 @@ import java.util.Set;
 
 import org.json.JSONArray;
 
-import entity.Item;
-
 public class MySQLConnection {
 	// make a connection, utilize JDBC to implement the connection between
 	// MYSQLClient and MySQL
