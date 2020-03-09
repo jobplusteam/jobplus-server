@@ -13,6 +13,8 @@ public class Item {
 	private String url;
 	private String companyUrl;
 	private String description;
+	private String howToApply;
+
 
 	// Construct Item using ItemBuilder
 	public Item(ItemBuilder builder) {
@@ -25,7 +27,13 @@ public class Item {
 		this.url = builder.url;
 		this.companyUrl = builder.companyUrl;
 		this.description = builder.description;
+		this.howToApply = builder.howToApply;
 
+
+	}
+
+	public String getHowToApply() {
+		return howToApply;
 	}
 
 	public String getId() {
@@ -77,6 +85,8 @@ public class Item {
 			obj.put("url", url);
 			obj.put("company_url", companyUrl);
 			obj.put("description", description);
+			obj.put("how_to_apply", howToApply);
+
 
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -95,6 +105,8 @@ public class Item {
 		private String url;
 		private String companyUrl;
 		private String description;
+		private String howToApply;
+
 
 		public ItemBuilder setId(String id) {
 			this.id = id;
@@ -141,6 +153,11 @@ public class Item {
 			return this;
 		}
 		
+		
+		public void setHowToApply(String howToApply) {
+			this.howToApply = howToApply;
+		}
+
 		public Item build() {
 			return new Item(this);
 		}

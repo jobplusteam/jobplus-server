@@ -167,6 +167,10 @@ public class GithubJobClient {
 		if (!job.isNull("description")) {
 			builder.setDescription(job.getString("description"));
 		}
+		
+		if (!job.isNull("how_to_apply")) {
+			builder.setHowToApply(job.getString("how_to_apply"));
+		}
 
 		return builder.build();
 	}
@@ -206,6 +210,10 @@ public class GithubJobClient {
 
 			if (!job.isNull("description")) {
 				builder.setDescription(job.getString("description"));
+			}
+			
+			if (!job.isNull("how_to_apply")) {
+				builder.setHowToApply(job.getString("how_to_apply"));
 			}
 
 			itemList.add(builder.build());
