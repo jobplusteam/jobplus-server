@@ -40,40 +40,30 @@ public class Nearby extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		// find userId
 		String userId = "";
-
-		// allow access only if session exists
 		HttpSession session = request.getSession(false);
 		if (session != null) {
-			// optional
 			userId = session.getAttribute("user_id").toString();
 		}
 
+		// parse geoLocation
 		double lat = Double.parseDouble(request.getParameter("lat"));
 		double lon = Double.parseDouble(request.getParameter("lon"));
 
-		GithubJobClient client = new GithubJobClient();
-		List<Item> jobs = client.nearby(lat, lon);
-
+		// find saved jobs from db
 		MySQLConnection connection = new MySQLConnection();
 		Set<String> savedJobs = connection.getSavedJobs(userId);
 		connection.close();
 
-		JSONArray array = new JSONArray();
-		for (Item job : jobs) {
-			JSONObject obj = job.toJSONObject();
-			boolean isSaved = false;
-			if (savedJobs.contains(job.getId())) {
-				isSaved = true;
-			}
-			try {
-				obj.put("is_saved", isSaved);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			array.put(obj);
-		}
+		// find nearby results from Github
+		GithubJobClient client = new GithubJobClient();
+		List<Item> jobs = client.nearby(lat, lon);
+
+		// label saved jobs before return 
+		JSONArray array = RpcHelper.labeledJobs(jobs, savedJobs);
+		
+		// return labeled jobs
 		RpcHelper.writeJsonArray(request, response, array);
 	}
 
