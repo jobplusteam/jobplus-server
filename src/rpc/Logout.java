@@ -41,6 +41,8 @@ public class Logout extends HttpServlet {
 		if (session == null) {
 			RpcHelper.protectEndpoint(request, response);
 			return;
+		} else {
+			session.invalidate();
 		}
 
 		// prepare response body

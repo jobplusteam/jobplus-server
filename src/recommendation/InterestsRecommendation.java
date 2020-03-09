@@ -23,7 +23,7 @@ public class InterestsRecommendation {
 		List<Item> items = new ArrayList<>();
 		for (String interest : interests) {
 			// get search result for each interest
-			List<Item> itemList = client.search(interest, null, null);
+			List<Item> itemList = client.search(interest, "", "");
 			// add all search results to items;
 			items.addAll(itemList);
 		}
