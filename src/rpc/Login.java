@@ -37,23 +37,26 @@ public class Login extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		JSONObject res = new JSONObject();
+
 		// check if session exists
 		HttpSession session = request.getSession(false);
-		MySQLConnection connection = new MySQLConnection();
+
+		// prepare message
 		String msg = "";
-		if (session == null) {
+		if (session == null) { // session not exists
 			msg = "no session";
-		} else {
+		} else {			   // session exists
 			String userId = session.getAttribute("user_id").toString();
-			String fullName = connection.getFullname(userId);
-			msg = fullName;
+			MySQLConnection connection = new MySQLConnection();
+			msg = connection.getFullname(userId);
 			connection.close();
 		}
+
+		// prepare response body
+		JSONObject res = new JSONObject();
 		try {
 			res.put("status", msg);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		RpcHelper.writeJsonObject(request, response, res);
@@ -65,23 +68,25 @@ public class Login extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
 		MySQLConnection connection = new MySQLConnection();
 		try {
 			JSONObject input = RpcHelper.readJSONObject(request);
 			String userId = input.getString("user_id");
 			String password = input.getString("password");
 
-			JSONObject obj = new JSONObject();
+			// prepare response body
+			JSONObject res = new JSONObject();
 			if (connection.verifyLogin(userId, password)) {
 				HttpSession session = request.getSession();
 				session.setAttribute("user_id", userId);
 				session.setMaxInactiveInterval(600);
-				obj.put("status", "OK").put("user_id", userId).put("name", connection.getFullname(userId));
+				res.put("status", "OK").put("user_id", userId).put("name", connection.getFullname(userId));
 			} else {
-				obj.put("status", "User Doesn't Exist");
+				res.put("status", "User Doesn't Exist");
 				response.setStatus(401);
 			}
-			RpcHelper.writeJsonObject(request, response, obj);
+			RpcHelper.writeJsonObject(request, response, res);
 
 		} catch (Exception e) {
 			e.printStackTrace();

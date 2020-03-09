@@ -33,16 +33,23 @@ public class Logout extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
+
+		// allow access only if session exists
 		HttpSession session = request.getSession(false);
-		if (session != null) {
-			session.invalidate();
+
+		// if session not exists, return message
+		if (session == null) {
+			RpcHelper.protectEndpoint(request, response);
+			return;
 		}
+
+		// prepare response body
 		JSONObject res = new JSONObject();
+		
+		// session exists
 		try {
 			res.put("message", "logout successfully");
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		RpcHelper.writeJsonObject(request, response, res);

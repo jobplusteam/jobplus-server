@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.monkeylearn.MonkeyLearnException;
 
@@ -44,52 +46,46 @@ public class Recommend extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		//allow access only if session exists
+		// allow access only if session exists
 		HttpSession session = request.getSession(false);
+		// if session not exists, return message
 		if (session == null) {
-			response.setStatus(403);
+			RpcHelper.protectEndpoint(request, response);
 			return;
 		}
 
-		//optional
+		// session exists, get userId from session
 		String userId = session.getAttribute("user_id").toString();
 
-		List<Item> items = new ArrayList<>();
-
+		// find saved jobs from db
 		MySQLConnection connection = new MySQLConnection();
 		Set<String> savedJobs = connection.getSavedJobs(userId);
+		connection.close();
 
-		if (savedJobs.size() == 0) {
-			// case 1: user has no saved jobs
-			System.out.println("recommended based on interests");
-			InterestsRecommendation recommendation = new InterestsRecommendation(); 
-			try {
-				items = recommendation.recommendItems(userId);
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		List<Item> jobs = new ArrayList<>();
+		// find recommended results based on user behavior
+		try {
+			if (savedJobs.size() == 0) {
+				// case 1: user has no saved jobs
+				System.out.println("recommended based on interests");
+				InterestsRecommendation recommendation = new InterestsRecommendation();
+				jobs = recommendation.recommendItems(userId);
+			} else {
+				// case 2: user has saved jobs
+				System.out.println("recommended based on history");
+				KeywordRecommendation recommendation = new KeywordRecommendation();
+				jobs = recommendation.recommendItems(userId);
 			}
-		} else {
-			// case 2: user has saved jobs
-			System.out.println("recommended based on history");
-
-			KeywordRecommendation recommendation = new KeywordRecommendation();
-
-			try {
-				items = recommendation.recommendItems(userId);
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (MonkeyLearnException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (MonkeyLearnException e) {
+			e.printStackTrace();
 		}
 
-		JSONArray array = new JSONArray();
-		for (Item item : items) {
-			array.put(item.toJSONObject());
-		}
+		// lable saved jobs before return
+		JSONArray array = RpcHelper.labeledJobs(jobs, savedJobs);
+
+		// return jobs
 		RpcHelper.writeJsonArray(request, response, array);
 	}
 

@@ -42,30 +42,33 @@ public class Save extends HttpServlet {
 
 		// allow access only if session exists
 		HttpSession session = request.getSession(false);
+		// if session not exists, return message
 		if (session == null) {
-			response.setStatus(403);
+			RpcHelper.protectEndpoint(request, response);
 			return;
 		}
 
 		String userId = session.getAttribute("user_id").toString();
 		JSONArray array = new JSONArray();
 
+		// find saved jobs from db
 		MySQLConnection connection = new MySQLConnection();
 		Set<String> savedJobIds = connection.getSavedJobs(userId);
 		connection.close();
 
+		// find all saved jobs from Github
 		GithubJobClient client = new GithubJobClient();
-
-		for (String id : savedJobIds) {
-			Item job = client.getJobfromJobId(id);
-			JSONObject obj = job.toJSONObject();
-			try {
+		try {
+			for (String id : savedJobIds) {
+				Item job = client.getJobfromJobId(id);
+				JSONObject obj = job.toJSONObject();
 				obj.append("is_saved", true);
-			} catch (JSONException e) {
-				e.printStackTrace();
+				array.put(obj);
 			}
-			array.put(obj);
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
+
 		RpcHelper.writeJsonArray(request, response, array);
 
 	}
@@ -76,46 +79,39 @@ public class Save extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		
 		// allow access only if session exists
 		HttpSession session = request.getSession(false);
+		// if session not exists, return message
 		if (session == null) {
-			response.setStatus(403);
+			RpcHelper.protectEndpoint(request, response);
 			return;
 		}
-		
+
+		// prepare response
+		JSONObject res = new JSONObject();
+
+		// session exists, find user id
 		String userId = session.getAttribute("user_id").toString();
 		JSONObject input = RpcHelper.readJSONObject(request);
+
+		// save job id into db
+		MySQLConnection connection = new MySQLConnection();
 		try {
-			JSONObject res = new JSONObject();
-			// payload expected { "job_id" : "xxxxx" , "is_save" : "true"}
+			// parse request body
 			String jobId = input.getString("job_id");
-			Boolean isSave = input.getBoolean("is_save");
+			boolean isSave = input.getBoolean("is_save");
+			// save job id into interest table
+			String result = isSave ? "SAVE" : "UNSAVE";
+			String message = connection.setSavedJob(userId, jobId, isSave) ? "succuessful!" : "failed!";
+			res.put("result", result);
+			res.put("message", message);
 
-			MySQLConnection connection = new MySQLConnection();
-			if (isSave) {
-				if (connection.setSavedJob(userId, jobId)) {
-					res.put("result", "SAVE");
-					res.put("message", "success!");
-				} else {
-					res.put("result", "SAVE");
-					res.put("message", "failed!");
-				}
-				
-			} else {
-				if (connection.unSetSavedJob(userId, jobId)) {
-					res.put("result", "UNSAVE");
-					res.put("message", "success!");
-				} else {
-					res.put("result", "UNSAVE");
-					res.put("message", "failed!");
-				}
-			}
-
-			connection.close();
 			RpcHelper.writeJsonObject(request, response, res);
 		} catch (JSONException e) {
 			e.printStackTrace();
+		} finally {
+			connection.close();
 		}
 	}
 

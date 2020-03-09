@@ -47,7 +47,7 @@ public class KeywordRecommendation {
 			desc.append(s + " ");
 		}
 
-		return client.search(desc.toString(), null, null);
+		return client.search(desc.toString(), "", "");
 
 	}
 }

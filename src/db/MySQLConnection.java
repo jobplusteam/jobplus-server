@@ -89,7 +89,6 @@ public class MySQLConnection {
 		}
 
 		try {
-
 			// step 1: add user into users table
 			String sql1 = "INSERT IGNORE INTO users (user_id, password, first_name, last_name) "
 					+ "VALUES (?, ?, ?, ?)";
@@ -143,30 +142,15 @@ public class MySQLConnection {
 		return savedJobs;
 	}
 
-	public boolean setSavedJob(String userId, String jobId) {
+	public boolean setSavedJob(String userId, String jobId, boolean isSave) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
 			return false;
 		}
 		try {
-			String sql = "INSERT IGNORE INTO saved (user_id, item_id) VALUES (?,?)";
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, userId);
-			ps.setString(2, jobId);
-			return ps.executeUpdate() == 1;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return true;
-	}
-	
-	public boolean unSetSavedJob(String userId, String jobId) {
-		if (conn == null) {
-			System.err.println("DB connection failed");
-			return false;
-		}
-		try {
-			String sql = "DELETE FROM saved WHERE user_id = ? and item_id = ?";
+			String sql = isSave ? 
+					"INSERT IGNORE INTO saved (user_id, item_id) VALUES (?,?)" : 
+					"DELETE FROM saved WHERE user_id = ? and item_id = ?";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, userId);
 			ps.setString(2, jobId);
