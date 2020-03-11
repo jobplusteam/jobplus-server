@@ -135,7 +135,7 @@ public class GithubJobClient {
 	}
 
 	// Convert JSONObject to a item object
-	private Item getItemObject(JSONObject job) throws JSONException {
+	public Item getItemObject(JSONObject job) throws JSONException {
 
 		ItemBuilder builder = new ItemBuilder();
 		if (!job.isNull("id")) {
@@ -180,7 +180,7 @@ public class GithubJobClient {
 	}
 
 	// Convert JSONArray to a list of item objects.
-	private List<Item> getItemList(JSONArray jobs) throws JSONException {
+	public List<Item> getItemList(JSONArray jobs) throws JSONException {
 		List<Item> itemList = new ArrayList<>();
 		for (int i = 0; i < jobs.length(); ++i) {
 			JSONObject job = jobs.getJSONObject(i);
