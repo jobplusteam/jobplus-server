@@ -13,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import entity.Item;
-import entity.Item.ItemBuilder;
 
 public class RpcHelper {
 	// Writes a JSONArray to http response.
@@ -83,10 +82,5 @@ public class RpcHelper {
 		return array;
 	}
 
-	public static Item parseSavedJob(JSONObject savedJob) throws JSONException {
-		ItemBuilder builder = new ItemBuilder();
-		builder.setId(savedJob.getString("item_id"));
-		return builder.build();
-	}
 
 }

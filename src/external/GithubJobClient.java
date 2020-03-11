@@ -135,7 +135,7 @@ public class GithubJobClient {
 	}
 
 	// Convert JSONObject to a item object
-	private Item getItemObject(JSONObject job) throws JSONException {
+	public Item getItemObject(JSONObject job) throws JSONException {
 
 		ItemBuilder builder = new ItemBuilder();
 		if (!job.isNull("id")) {
@@ -167,12 +167,20 @@ public class GithubJobClient {
 		if (!job.isNull("description")) {
 			builder.setDescription(job.getString("description"));
 		}
+		
+		if (!job.isNull("how_to_apply")) {
+			builder.setHowToApply(job.getString("how_to_apply"));
+		}
+		
+		if (!job.isNull("location")) {
+			builder.setLocation(job.getString("location"));
+		}
 
 		return builder.build();
 	}
 
 	// Convert JSONArray to a list of item objects.
-	private List<Item> getItemList(JSONArray jobs) throws JSONException {
+	public List<Item> getItemList(JSONArray jobs) throws JSONException {
 		List<Item> itemList = new ArrayList<>();
 		for (int i = 0; i < jobs.length(); ++i) {
 			JSONObject job = jobs.getJSONObject(i);
@@ -207,7 +215,15 @@ public class GithubJobClient {
 			if (!job.isNull("description")) {
 				builder.setDescription(job.getString("description"));
 			}
+			
+			if (!job.isNull("how_to_apply")) {
+				builder.setHowToApply(job.getString("how_to_apply"));
+			}
 
+			if (!job.isNull("location")) {
+				builder.setLocation(job.getString("location"));
+			}
+			
 			itemList.add(builder.build());
 		}
 		return itemList;

@@ -103,7 +103,7 @@ public class Save extends HttpServlet {
 			boolean isSave = input.getBoolean("is_save");
 			// save job id into interest table
 			String result = isSave ? "SAVE" : "UNSAVE";
-			String message = connection.setSavedJob(userId, jobId, isSave) ? "succuessful!" : "failed!";
+			String message = connection.setSavedJob(userId, jobId, isSave) ? "successful!" : "failed!";
 			res.put("result", result);
 			res.put("message", message);
 
