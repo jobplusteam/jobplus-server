@@ -16,7 +16,7 @@ import com.monkeylearn.MonkeyLearnException;
 import com.monkeylearn.MonkeyLearnResponse;
 
 public class MonkeyLearnExtractor {
-	private static final String API_KEY = "2e42c630d27db05387bed783197877527e4d7ffa";
+	private static final String API_KEY = "f3e09400dd0509d8e2756b5b21fd71a7257f18dc";
 	private static final String MODEL_ID = "ex_YCya9nrn";
 
 	public JSONArray extract(String[] data) throws MonkeyLearnException {
